@@ -10,10 +10,10 @@
   "author": "R7D.",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1",
-    "groq": "^1.0.0",
-    "plotly": "^5.9.0",
-    "flask": "^2.0.0"
+    "express": "*",
+    "groq": "*",
+    "plotly": "*",
+    "flask": "*"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
