@@ -1,1 +1,24 @@
-npm init
+{
+  "name": "NODE AI",
+  "version": "1.0.0",
+  "description": "Redefining story writing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "R7D.",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "groq": "^1.0.0",
+    "plotly": "^5.9.0",
+    "flask": "^2.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
