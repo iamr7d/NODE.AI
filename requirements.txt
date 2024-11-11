@@ -1,2 +1,4 @@
-flask
-groq
+Flask==2.2.2
+groq==0.1.0
+plotly==5.10.0
+numpy==1.23.3
