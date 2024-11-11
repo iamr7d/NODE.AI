@@ -1,12 +1,12 @@
 [build]
-  base = "/"  # Base directory where your code is located (root directory)
-  command = "pip install -r requirements.txt"  # Install Python dependencies
-  publish = "public"  # Publish directory for static content (if you have any)
+  base = "/"
+  command = "pip install -r requirements.txt && python app.py"  # or any appropriate command to start your app
+  publish = "static"  # Or wherever your static files are located
 
 [functions]
-  directory = "functions"  # This points to the folder containing app.py
+  directory = "functions"  # If you use serverless functions, otherwise remove this
 
 [[redirects]]
   from = "/"
-  to = "/index.html"  # Redirect root to index.html (if you have one)
-  status = 200
+  to = "/index.html"
+  status = 200  # Rewrite to serve the index.html if applicable
