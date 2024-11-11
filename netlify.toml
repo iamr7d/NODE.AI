@@ -1,8 +1,7 @@
 [build]
-  functions = "functions"
-  publish = "public"
+  base = "/"  # or set this to a specific subfolder if needed
+  command = "pip install -r requirements.txt"  # to install Python dependencies
+  publish = "/"  # Change this to root or the folder containing index.html
 
-[[redirects]]
-  from = "/"
-  to = "/index.html"
-  status = 200
+[functions]
+  directory = "functions"  # Keep this as is, if you're using serverless functions
