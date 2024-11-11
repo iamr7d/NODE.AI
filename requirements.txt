@@ -2,4 +2,3 @@ Flask
 groq
 plotly
 numpy
-netlify-functions
