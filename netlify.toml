@@ -1,7 +1,13 @@
 [build]
-  base = "/"  # or set this to a specific subfolder if needed
-  command = "pip install -r requirements.txt"  # to install Python dependencies
-  publish = "/"  # Change this to root or the folder containing index.html
+  base = "/"  # Adjust this if your project is in a subfolder
+  command = "pip install -r requirements.txt"  # Install dependencies
+  publish = "/"  # Or specify the correct directory, typically the root for single-page apps
 
 [functions]
-  directory = "functions"  # Keep this as is, if you're using serverless functions
+  directory = "functions"  # Netlify will look for Python functions here
+
+[redirects]
+  # Redirect all traffic to index.html (useful for Single Page Applications)
+  from = "/"
+  to = "/index.html"
+  status = 200
