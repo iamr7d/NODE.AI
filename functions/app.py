@@ -8,11 +8,13 @@ import plotly.express as px
 import json
 import numpy as np
 
+# Initialize Flask app
 app = Flask(__name__)
 
-# Initialize Groq client
+# Groq client initialization
 client = Groq(api_key="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")
 
+# Dataclass for story nodes
 @dataclass
 class StoryNode:
     id: str
@@ -23,6 +25,7 @@ class StoryNode:
     genre: str
     is_selected: bool = False
 
+# Story tree class to manage nodes and paths
 class StoryTree:
     def __init__(self):
         self.nodes: Dict[str, StoryNode] = {}
@@ -31,6 +34,7 @@ class StoryTree:
         self.weights_history: List[float] = []
 
     def add_node(self, content: str, weight: float, parent_id: Optional[str], genre: str) -> str:
+        """Add a node to the story tree"""
         node_id = str(uuid.uuid4())
         node = StoryNode(
             id=node_id,
@@ -50,19 +54,21 @@ class StoryTree:
         return node_id
 
     def get_current_path(self) -> List[StoryNode]:
+        """Get the current path of the story"""
         return [self.nodes[node_id] for node_id in self.current_path]
 
     def get_genre_distribution(self) -> Dict[str, int]:
+        """Get the distribution of genres in the story tree"""
         genre_counts = {}
         for node in self.nodes.values():
             genre_counts[node.genre] = genre_counts.get(node.genre, 0) + 1
         return genre_counts
 
-# Initialize story tree
+# Initialize the story tree
 story_tree = StoryTree()
 
 def get_llm_response(prompt: str) -> str:
-    """Get response from Groq LLM"""
+    """Get a response from Groq's LLM"""
     try:
         response = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
@@ -80,7 +86,7 @@ def generate_next_situations(current_situation: str, genre: str, n: int = 3) -> 
     "{current_situation}"
     
     Generate {n} possible next future situations that could follow. Make them creative and distinct from each other.
-    Rate each situation with a score from 0 to 1 based on how well it fits the genre and advances the story.the answers should be veryshort, i am craeting a story plot point.
+    Rate each situation with a score from 0 to 1 based on how well it fits the genre and advances the story.
     
     Format the response as:
     1. [Situation 1] | Score: [0-1]
@@ -174,10 +180,12 @@ def generate_analytics_data():
 
 @app.route('/')
 def index():
+    """Render the home page"""
     return render_template('index.html')
 
 @app.route('/start_story', methods=['POST'])
 def start_story():
+    """Start a new story"""
     data = request.get_json()
     initial_situation = data['situation']
     genre = data['genre']
@@ -202,6 +210,7 @@ def start_story():
 
 @app.route('/select_situation', methods=['POST'])
 def select_situation():
+    """Select a situation and proceed"""
     data = request.get_json()
     selected_situation = data['situation']
     parent_id = story_tree.current_path[-1]
@@ -223,6 +232,7 @@ def select_situation():
 
 @app.route('/regenerate_situations', methods=['POST'])
 def regenerate_situations():
+    """Regenerate next situations for the current story node"""
     data = request.get_json()
     current_node_id = data['current_node']
     genre = data['genre']
@@ -236,6 +246,7 @@ def regenerate_situations():
 
 @app.route('/update_genre', methods=['POST'])
 def update_genre():
+    """Update the genre of the current node"""
     data = request.get_json()
     node_id = data['node_id']
     new_genre = data['genre']
@@ -251,25 +262,9 @@ def update_genre():
 
 @app.route('/get_analytics', methods=['GET'])
 def get_analytics():
-    return jsonify(generate_analytics_data())
+    """Get story analytics (progress, genre distribution, path complexity)"""
+    analytics_data = generate_analytics_data()
+    return jsonify(analytics_data)
 
-@app.route('/get_unexplored_paths', methods=['GET'])
-def get_unexplored_paths():
-    current_node_id = story_tree.current_path[-1]
-    current_node = story_tree.nodes[current_node_id]
-    
-    unexplored_children = [
-        story_tree.nodes[child_id]
-        for child_id in current_node.children
-        if child_id not in story_tree.current_path
-    ]
-    
-    return jsonify({
-        "unexplored_paths": [
-            {"id": node.id, "content": node.content, "weight": node.weight}
-            for node in unexplored_children
-        ]
-    })
-
-if __name__ == '__main__':
-    app.run(debug=True) #
+if __name__ == "__main__":
+    app.run(debug=True)
